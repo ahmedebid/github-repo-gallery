@@ -8,6 +8,10 @@ const repoListElement = document.querySelector(".repo-list");
 const allReposElement = document.querySelector(".repos");
 // The section where the individual repo data appears
 const repoDataElement = document.querySelector(".repo-data");
+// The "Back to Repo Gallery" button
+const backToGallery = document.querySelector(".view-repos");
+// The search box
+const filterInput = document.querySelector(".filter-repos");
 
 
 // A function to fetch information from the GitHub profile
@@ -47,6 +51,7 @@ const getReposInfo = async function () {
 
 // A function to display info about each GitHub public repo for a certain username
 const displayReposInfo = function (repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
         const li = document.createElement("li");
         li.classList.add("repo");
@@ -93,4 +98,28 @@ const displayRepoInfo = function (repoInfo, languages) {
     repoDataElement.append(div);
     repoDataElement.classList.remove("hide");
     allReposElement.classList.add("hide");
+    backToGallery.classList.remove("hide");
 };
+
+// An event listener and handler for backToGallery button
+backToGallery.addEventListener("click", function () {
+    allReposElement.classList.remove("hide");
+    repoDataElement.classList.add("hide");
+    backToGallery.classList.add("hide");
+});
+
+// An event listener and handler for the dynamic search box
+filterInput.addEventListener("input", function (e) {
+    const searchValue = e.target.value;
+    console.log(searchValue);
+    const repos = document.querySelectorAll(".repo");
+    const searchValueLowerCase = searchValue.toLowerCase();
+    for (const repo of repos) {
+        const name = repo.innerText.toLowerCase();
+        if (name.includes(searchValueLowerCase)) {
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    }
+});
