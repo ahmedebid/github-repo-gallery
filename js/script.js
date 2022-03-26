@@ -2,13 +2,15 @@
 const overviewElement = document.querySelector(".overview");
 // GitHub username
 const username = "ahmedebid";
+// An unorder list to display the GitHub repos
+const repoListElement = document.querySelector(".repo-list");
 
 // A function to fetch information from the GitHub profile
 const getUserInfo = async function () {
     const response = await fetch(`https://api.github.com/users/${username}`);
     const data = await response.json();
     displayUserInfo(data);
-}
+};
 
 getUserInfo();
 
@@ -26,6 +28,24 @@ const displayUserInfo = function (data) {
             <p><strong>Location:</strong> ${data.location}</p>
             <p><strong>Number of public repos:</strong> ${data.public_repos}</p>
         </div> 
-    `
+    `;
     overviewElement.append(div);
-}
+    getReposInfo();
+};
+
+// A function to fetch the GitHub public repos info for a certain username
+const getReposInfo = async function () {
+    const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=100`);
+    const data = await response.json();
+    displayReposInfo(data);
+};
+
+// A function to display info about each GitHub public repo for a certain username
+const displayReposInfo = function (repos) {
+    for (const repo of repos) {
+        const li = document.createElement("li");
+        li.classList.add("repo");
+        li.innerHTML = `<h3>${repo.name}</h3>`
+        repoListElement.append(li);
+    }
+};
